@@ -1,0 +1,19 @@
+[package]
+name = "osom_x64"
+version = "0.1.0"
+edition.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+
+[dependencies]
+osom_x64_core = { path = "osom_x64_core" }
+osom_x64_macros = { path = "osom_x64_macros" }
+osom_x64_cg = { path = "osom_x64_cg", optional = true }
+
+osom_macros = { path = "../../libs/osom_macros" }
+
+
+[features]
+default = []
+osom_x64_cg = ["dep:osom_x64_cg"]

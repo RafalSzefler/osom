@@ -1,0 +1,29 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Fmt
+      run: cargo fmt --check
+    - name: Build
+      run: cargo build -r --verbose
+    - name: Clippy
+      run: cargo clippy -r -- -D warnings
+    - name: Run tests
+      run: cargo test -r --verbose
