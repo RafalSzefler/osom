@@ -6,3 +6,7 @@ authors.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+osom_traits = { path = "../osom_traits" }
+
+[dev-dependencies]
+rand = { workspace = true }

@@ -6,3 +6,5 @@ authors.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+paste = { workspace = true }
+osom_utils = { path = "../../../libs/osom_utils" }

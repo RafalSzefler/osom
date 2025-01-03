@@ -2,8 +2,19 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(docsrs, allow(unused_attributes))]
 
-use osom_macros::reexport_crate;
+#[doc(hidden)]
+extern crate osom_x64_core;
+pub use osom_x64_core::*;
 
-reexport_crate!(osom_x64_core);
-reexport_crate!(osom_x64_macros);
-reexport_crate!(osom_x64_cg, "osom_x64_cg");
+#[doc(hidden)]
+extern crate osom_x64_macros;
+pub use osom_x64_macros::*;
+
+#[cfg(feature = "osom_x64_cg")]
+#[doc(hidden)]
+extern crate osom_x64_cg;
+
+#[cfg_attr(docsrs, doc(cfg(feature = "osom_x64_cg")))]
+#[cfg(feature = "osom_x64_cg")]
+#[allow(unused_imports)]
+pub use osom_x64_cg::*;

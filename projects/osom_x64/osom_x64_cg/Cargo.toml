@@ -10,6 +10,4 @@ proc-macro2 = { workspace = true }
 quote = { workspace = true }
 syn = { workspace = true }
 
-osom_macros = { path = "../../../libs/osom_macros" }
-
 osom_x64_core = { path = "../osom_x64_core" }

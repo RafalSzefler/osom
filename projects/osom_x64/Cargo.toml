@@ -11,8 +11,6 @@ osom_x64_core = { path = "osom_x64_core" }
 osom_x64_macros = { path = "osom_x64_macros" }
 osom_x64_cg = { path = "osom_x64_cg", optional = true }
 
-osom_macros = { path = "../../libs/osom_macros" }
-
 
 [features]
 default = []
