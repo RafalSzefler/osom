@@ -1,6 +1,6 @@
 use std::{alloc::Layout, ptr::NonNull};
 
-use osom_traits::allocator::Allocator;
+use osom_alloc::Allocator;
 
 pub struct InternalArray<T, TAllocator>
 where

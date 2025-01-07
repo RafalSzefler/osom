@@ -1,8 +1,9 @@
 [workspace]
 members = [
-    "libs/osom_traits",
+    "libs/osom_alloc",
     "libs/osom_utils",
-    "projects/osom_x64",
+    "projects/osom_x64/osom_x64_asm",
+    "projects/osom_x64/osom_x64_encoder",
 ]
 resolver = "2"
 
@@ -13,6 +14,9 @@ rust-version = "1.83"
 
 [workspace.dependencies]
 rand = "0.8"
+
+# tests
+rstest = "0.24"
 
 # macros
 proc-macro2 = "1.0"

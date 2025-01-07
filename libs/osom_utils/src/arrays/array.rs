@@ -1,4 +1,4 @@
-use osom_traits::{allocator::Allocator, default_impl::StdAllocator};
+use osom_alloc::{Allocator, StdAllocator};
 
 use super::{internal::InternalArray, DynamicArray};
 

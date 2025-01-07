@@ -1,9 +1,6 @@
 use std::alloc::Layout;
 
-use osom_traits::{
-    allocator::{AllocationError, Allocator},
-    default_impl::StdAllocator,
-};
+use osom_alloc::{AllocationError, Allocator, StdAllocator};
 
 use super::{internal::InternalArray, Array};
 
@@ -58,6 +55,11 @@ impl<T, TAllocator> DynamicArray<T, TAllocator>
 where
     TAllocator: Allocator,
 {
+    #[inline(always)]
+    const fn calculate_new_capacity(old_capacity: u32) -> u32 {
+        (old_capacity * 3) / 2
+    }
+
     /// Returns the minimal capacity [`DynamicArray`] can have. Note that
     /// length can still be zero.
     #[must_use]
@@ -129,7 +131,9 @@ where
     /// # Errors
     /// See [`DynamicArrayError`].
     pub fn push(&mut self, value: T) -> Result<(), DynamicArrayError> {
-        self.resize_if_needed()?;
+        if self.internal.length == self.internal.capacity {
+            self.grow_for_one()?;
+        }
 
         unsafe {
             let address = self.internal.ptr.add(self.internal.length as usize);
@@ -197,33 +201,31 @@ where
         }
     }
 
-    fn resize_if_needed(&mut self) -> Result<(), DynamicArrayError> {
-        if self.internal.length == self.internal.capacity {
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let new_capacity = (f64::from(self.internal.capacity) * 1.6) as u32;
+    fn grow_for_one(&mut self) -> Result<(), DynamicArrayError> {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let new_capacity = Self::calculate_new_capacity(self.internal.capacity);
 
-            if new_capacity > Self::max_length() {
-                return Err(DynamicArrayError::CapacityTooBig);
-            }
-
-            let old_layout = unsafe {
-                Layout::from_size_align_unchecked(
-                    size_of::<T>() * (self.internal.capacity as usize),
-                    align_of::<T>(),
-                )
-            };
-
-            let new_size = size_of::<T>() * (new_capacity as usize);
-
-            let new_ptr = self.internal.allocator.reallocate(
-                self.internal.ptr.cast(),
-                old_layout,
-                new_size,
-            )?;
-
-            self.internal.ptr = new_ptr.cast();
-            self.internal.capacity = new_capacity;
+        if new_capacity > Self::max_length() {
+            return Err(DynamicArrayError::CapacityTooBig);
         }
+
+        let old_layout = unsafe {
+            Layout::from_size_align_unchecked(
+                size_of::<T>() * (self.internal.capacity as usize),
+                align_of::<T>(),
+            )
+        };
+
+        let new_size = size_of::<T>() * (new_capacity as usize);
+
+        let new_ptr = self.internal.allocator.reallocate(
+            self.internal.ptr.cast(),
+            old_layout,
+            new_size,
+        )?;
+
+        self.internal.ptr = new_ptr.cast();
+        self.internal.capacity = new_capacity;
 
         Ok(())
     }

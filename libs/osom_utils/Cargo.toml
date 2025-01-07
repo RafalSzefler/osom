@@ -6,7 +6,12 @@ authors.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-osom_traits = { path = "../osom_traits" }
+osom_alloc = { path = "../osom_alloc" }
 
 [dev-dependencies]
 rand = { workspace = true }
+criterion = { version = "0.5" }
+
+[[bench]]
+name = "arrays"
+harness = false
