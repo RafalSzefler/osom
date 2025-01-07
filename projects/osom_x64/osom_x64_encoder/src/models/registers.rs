@@ -24,8 +24,8 @@ macro_rules! reg_class {
             /// Creates a new instance.
             ///
             /// # Safety
-            /// `index` has to be in `0..=15`. Not all combinations with `MachineSize` are valid.
-            /// It is advised to use const fields on this struct instead.
+            /// `index` has to be in `0..=15` range. Not all combinations with `MachineSize` are
+            /// valid. It is advised to use const fields on this struct instead.
             #[must_use]
             #[inline(always)]
             pub const unsafe fn new_unchecked(size: MachineSize, index: u8) -> Self {
@@ -44,7 +44,7 @@ macro_rules! reg_class {
             #[must_use]
             #[inline(always)]
             pub const fn index(&self) -> u8 {
-                self.val
+                self.val & 0b1111
             }
         }
     };
